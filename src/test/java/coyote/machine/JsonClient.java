@@ -27,7 +27,7 @@ public class JsonClient
     Client client = Client.create();
 
     // Perform a GET request
-    WebResource webResource = client.resource( "http://localhost:8080/boss/machine/profile" );
+    WebResource webResource = client.resource( "http://localhost:8080/demo/machine/profile" );
     ClientResponse response = webResource.accept( "application/json" ).get( ClientResponse.class );
     if( response.getStatus() != 200 )
     {
@@ -40,7 +40,7 @@ public class JsonClient
     System.out.println( output );
 
     // Test out the POST request
-    webResource = client.resource( "http://localhost:8080/boss/machine/profile" );
+    webResource = client.resource( "http://localhost:8080/demo/machine/profile" );
     webResource.accept( "application/json" ).post( ClientResponse.class, output );
   }
 }
