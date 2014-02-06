@@ -1,3 +1,15 @@
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.h2database:h2:1.3.175'
+		classpath 'org.apache.activemq:activemq-broker:5.9.0'
+    }
+}
+
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
@@ -5,17 +17,21 @@ apply plugin: 'idea'
 apply plugin: 'jetty'
 apply plugin: 'war'
 
+
 sourceCompatibility = 1.6
 version = '0.1'
+
 
 // EMMA code coverage
 configurations{
 	emma
 }
 
+
 repositories {
     mavenCentral()
 }
+
 
 dependencies{
 
@@ -24,7 +40,7 @@ dependencies{
   emma 'emma:emma_ant:2.1.5320'
 	
   // runtime dependency on h2 so jetty can load it 
-  providedRuntime "com.h2database:h2:1.3.175"
+  providedRuntime 'com.h2database:h2:1.3.175'
   compile 'com.h2database:h2:1.3.175'
 	
   // Junit support for testing
@@ -45,15 +61,23 @@ dependencies{
   compile 'com.sun.jersey:jersey-json:1.18'
   compile 'org.codehaus.groovy:groovy-all:2.2.0'
 
-  
   // Apache DB Connection Pooling
   compile 'commons-dbcp:commons-dbcp:1.4'
   providedRuntime 'commons-dbcp:commons-dbcp:1.4'
   
   // slf4j so we can have some logging
-  compile "org.slf4j:slf4j-log4j12:1.7.5"
+  compile 'org.slf4j:slf4j-log4j12:1.7.5'
   
+  // JMS Messaging support
+  providedRuntime 'javax.jms:javax.jms-api:2.0'
+  compile 'javax.jms:javax.jms-api:2.0'
+  
+  // Apache ActiveMQ JMS broker 
+  providedRuntime 'org.apache.activemq:activemq-broker:5.9.0' 
+  compile 'org.apache.activemq:activemq-broker:5.9.0'
+
 }
+
 
 def emmaConvention = new EmmaPluginConvention(project)
 project.convention.plugins.emma = emmaConvention
@@ -79,8 +103,6 @@ class EmmaPluginConvention{
 		metaDataFilePath 	= "${tmpDir}/metadata.emma"
 	}
 }
-
-
 
 
 test {
@@ -118,22 +140,6 @@ test {
 }
 
 
-
-
-/**
-* Build script depedency on h2 so that we can initialize the H2 server on startup
-*/
-buildscript {
-   repositories {
-           mavenCentral()
-   }
-   dependencies {
-           classpath 'com.h2database:h2:1.3.175'
-   }
-}
-
-
-
 // Configure jettyRun, jettyRunWar and jettyStop tasks.
 jettyRun {  
   jettyEnvXml = file('src/main/resources/jetty-env.xml')
@@ -147,5 +153,14 @@ jettyRun {
   // Start the H2 database server which accepts local TCP connections and 
   // supports the web console  
   org.h2.tools.Server.main("-tcp", "-web")
+
+  // Start an ActiveMQ JMS service
+  org.apache.activemq.broker.BrokerService broker = new org.apache.activemq.broker.BrokerService()
+  broker.useJmx = false
+  broker.setBrokerName("BOSS")
+  broker.setPersistent(false)
+  broker.addConnector("tcp://localhost:61616")
+  broker.start()
+  
 }
 
