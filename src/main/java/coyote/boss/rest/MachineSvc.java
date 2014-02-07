@@ -60,6 +60,7 @@ public class MachineSvc
       InitialContext ic = new InitialContext();
       connectionFactory = (QueueConnectionFactory)ic.lookup( "java:comp/env/jms/connectionFactory" );
       myTopic = (Topic)ic.lookup( "java:comp/env/jms/topic" );
+      LOG.info( "MachineSvc initialized JMS secussfully" );
     }
     catch( Exception e )
     {
