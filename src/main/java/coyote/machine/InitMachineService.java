@@ -33,15 +33,18 @@ import org.slf4j.LoggerFactory;
  * This class models a servlet intended to initialize the runtime environment
  * for the demonstration services.
  */
-public class InitMachineService extends GenericServlet {
+public class InitMachineService extends GenericServlet
+{
 
   /**
    * 
    */
   private static final long serialVersionUID = -5490426583885157920L;
+
   private static Logger LOG;
 
-  static {
+  static
+  {
     LOG = LoggerFactory.getLogger( InitMachineService.class );
   }
 
@@ -52,17 +55,21 @@ public class InitMachineService extends GenericServlet {
    * @see javax.servlet.GenericServlet#init()
    */
   @Override
-  public void init() throws ServletException {
+  public void init() throws ServletException
+  {
     super.init();
 
-    try {
+    try
+    {
       final InitialContext ic = new InitialContext();
       final DataSource datasource = (DataSource)ic.lookup( "java:comp/env/jdbc/boss" );
-      if( datasource != null ) {
+      if( datasource != null )
+      {
 
         Connection con = null;
         Statement stmt = null;
-        try {
+        try
+        {
           con = datasource.getConnection();
           con.setAutoCommit( false );
 
@@ -81,7 +88,8 @@ public class InitMachineService extends GenericServlet {
           final PreparedStatement pstmt = con.prepareStatement( "INSERT INTO operator (ID, Last_Name, First_Name, Email, Phone_Number)" + " VALUES(?,?,?,?,?)" );
 
           // Add rows to a batch in a loop. Each iteration adds a new row.
-          for( int i = 0; i < firstNames.length; i++ ) {
+          for( int i = 0; i < firstNames.length; i++ )
+          {
             pstmt.setString( 1, ids[i] );
             pstmt.setString( 2, lastNames[i] );
             pstmt.setString( 3, firstNames[i] );
@@ -91,27 +99,33 @@ public class InitMachineService extends GenericServlet {
             pstmt.addBatch();
           }
 
-          try {
+          try
+          {
             pstmt.executeBatch();
             con.commit();
             LOG.info( "Operator data base initialized successfully" );
           }
-          catch( final SQLException e ) {
+          catch( final SQLException e )
+          {
             LOG.error( "Error message: " + e.getMessage() );
           }
 
           if( stmt != null )
             stmt.close();
         }
-        catch( final SQLException e ) {
+        catch( final SQLException e )
+        {
           LOG.error( e.getMessage() );
         }
-        finally {
-          try {
+        finally
+        {
+          try
+          {
             if( con != null )
               con.close();
           }
-          catch( final SQLException e ) {
+          catch( final SQLException e )
+          {
             LOG.error( e.getMessage() );
           }
         }
@@ -119,9 +133,11 @@ public class InitMachineService extends GenericServlet {
       else
         LOG.error( "Failure: data source lookup failed" );
     }
-    catch( final NamingException e ) {
+    catch( final NamingException e )
+    {
       LOG.error( "NAMING EXCEPTION:" + e.getMessage() );
     }
+
   }
 
 
@@ -132,7 +148,8 @@ public class InitMachineService extends GenericServlet {
    * javax.servlet.ServletResponse)
    */
   @Override
-  public void service( final ServletRequest req, final ServletResponse res ) throws ServletException, IOException {
+  public void service( final ServletRequest req, final ServletResponse res ) throws ServletException, IOException
+  {
     // This should never be called
   }
 
