@@ -1,13 +1,37 @@
 <?xml version="1.0"  encoding="ISO-8859-1"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+
 <Configure class="org.mortbay.jetty.webapp.WebAppContext">
-	<New id="bossDataSource" class="org.mortbay.jetty.plus.naming.Resource">
+
+    <New id="bossDataSource" class="org.mortbay.jetty.plus.naming.Resource">
 		<Arg></Arg>
 		<Arg>java:comp/env/jdbc/boss</Arg>
 		<Arg>
 			<New class="org.apache.commons.dbcp.BasicDataSource">
-				<Set name="url">jdbc:h2:tcp://localhost/boss;USER=sa;INIT=RUNSCRIPT FROM 'src/main/resources/init-connection.sql'</Set>
+				<Set name="url">jdbc:h2:tcp://localhost/boss;USER=sa;INIT=RUNSCRIPT FROM 'src/main/resources/init-connection.sql'
+				</Set>
 			</New>
 		</Arg>
 	</New>
+
+	<New id="bossMessaging" class="org.mortbay.jetty.plus.naming.Resource">
+		<Arg></Arg>
+		<Arg>java:comp/env/jms/boss</Arg>
+		<Arg>
+			<New class="org.apache.activemq.ActiveMQConnectionFactory">
+				<Arg>vm://localhost?broker.persistent=false</Arg>
+			</New>
+		</Arg>
+	</New>
+
+	<New id="bossTopic" class="org.mortbay.jetty.plus.naming.Resource">
+		<Arg></Arg>
+		<Arg>java:comp/env/jms/topic</Arg>
+		<Arg>
+			<New class="org.apache.activemq.command.ActiveMQTopic">
+				<Arg>my.test</Arg>
+			</New>
+		</Arg>
+	</New>
+
 </Configure>
