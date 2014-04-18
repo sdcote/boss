@@ -37,3 +37,4 @@ bin/
 *.ear
 !gradle/wrapper/*jar
 
+gradle.properties
