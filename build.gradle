@@ -1,6 +1,3 @@
-
-
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
@@ -12,6 +9,11 @@ apply plugin: 'war'
 sourceCompatibility = 1.6
 version = '0.1'
 
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
 
 // EMMA code coverage
 configurations{
