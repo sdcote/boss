@@ -1,13 +1,4 @@
 
-buildscript {
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath 'com.h2database:h2:1.3.175'
-		classpath 'org.apache.activemq:activemq-broker:5.9.0'
-    }
-}
 
 
 apply plugin: 'java'
@@ -93,6 +84,17 @@ dependencies{
 
 }
 
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	ext.h2Version = '1.4.177'
+	ext.activemqVersion = '5.9.0'
+	dependencies {
+		classpath "com.h2database:h2:$h2Version"
+		classpath "org.apache.activemq:activemq-broker:$activemqVersion"
+    }
+}
 
 def emmaConvention = new EmmaPluginConvention(project)
 project.convention.plugins.emma = emmaConvention
