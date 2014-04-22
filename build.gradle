@@ -160,10 +160,18 @@ test {
 
 
 // Configure jettyRun, jettyRunWar and jettyStop tasks.
-jettyRun {  
-  jettyEnvXml = file('src/main/resources/jetty-env.xml')
-  contextPath = 'demo'
+[jettyRun, jettyRunWar, jettyStop]*.with { 
+	stopPort = 8081
+	stopKey = 'stopKey'
 }
+[jettyRun, jettyRunWar]*.with { 
+	contextPath = 'demo'
+	httpPort = 80
+}
+jettyRun { 
+	jettyEnvXml = file('src/main/resources/jetty-env.xml')
+}
+
 
 
 // Run the h2 server before jetty starts up
